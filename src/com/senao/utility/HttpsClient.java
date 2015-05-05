@@ -106,10 +106,18 @@ public class HttpsClient
 
 		client.getConnectionManager().shutdown();
 
+		if(StringUtility.isValid(result))
+		{
+			result.trim();
+		}
+		else
+		{
+			result = "";
+		}
 		return result;
 	}
 
-	public String sendGet(String url)
+	public String sendGet(String url) throws Exception
 	{
 		String result = "";
 		HttpClient client = null;
@@ -131,13 +139,21 @@ public class HttpsClient
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
+			throw new Exception(e.toString());
 		}
 		finally
 		{
 			client.getConnectionManager().shutdown();
 		}
 
+		if(StringUtility.isValid(result))
+		{
+			result.trim();
+		}
+		else
+		{
+			result = "";
+		}
 		return result;
 	}
 

@@ -41,15 +41,8 @@ public abstract class StringUtility
 	/** Check String is numeric data type **/
 	public static boolean isNumeric(String str)
 	{
-		if (!isValid(str))
-		{
+		if(!isValid(str))
 			return false;
-		}
-		for (char c : str.toCharArray())
-		{
-			if (!java.lang.Character.isDigit(c))
-				return false;
-		}
-		return true;
+		return str.matches("[-+]?\\d*\\.?\\d+");  
 	}
 }
