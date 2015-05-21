@@ -2,10 +2,12 @@ package com.senao.utility;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 import javax.sql.*;
 import javax.naming.*;
@@ -18,6 +20,7 @@ public class DBConnect
 	public static int CONN_SUCCESS = 1;
 
 	private Connection con = null;
+	private Statement statement = null;
 
 	public DBConnect()
 	{
@@ -66,6 +69,12 @@ public class DBConnect
 	public void close() throws Exception
 	{
 		commit();
+		if (null != statement)
+		{
+			if (!statement.isClosed())
+				statement.close();
+			statement = null;
+		}
 		if (con != null)
 		{
 			con.close();
@@ -82,49 +91,68 @@ public class DBConnect
 	public int insert(final String strTable, HashMap<String, String> column) throws Exception
 	{
 		int nResult = ERR_UNKNOW;
-		
+
 		if (con != null && StringUtility.isValid(strTable) && 0 < column.size())
 		{
 			StringBuffer strColume = new StringBuffer();
 			StringBuffer strValue = new StringBuffer();
 			List<String> listValue = new ArrayList<String>();
-			
-			PreparedStatement prestmt  	= null;
-			
+
+			PreparedStatement prestmt = null;
+
 			int nIndex = 1;
 			for (Object key : column.keySet())
 			{
 				System.out.println(key + " : " + column.get(key));
-				
+
 				strColume.append(key);
 				strValue.append("?");
 				listValue.add(column.get(key));
-				
-				if(nIndex < column.size())
+
+				if (nIndex < column.size())
 				{
 					strColume.append(",");
 					strValue.append(",");
 				}
 				++nIndex;
 			}
-			
-			String strSQL = "insert into " + strTable + "(" +  strColume + ") values(" + strValue + ");";
+
+			String strSQL = "insert into " + strTable + "(" + strColume + ") values(" + strValue + ");";
 			prestmt = con.prepareStatement(strSQL);
-			
-			for(int i = 0; i < listValue.size(); ++i)
+
+			for (int i = 0; i < listValue.size(); ++i)
 			{
-				prestmt.setString(1 + i,listValue.get(i));
+				prestmt.setString(1 + i, listValue.get(i));
 			}
-			
+
 			int nRet = prestmt.executeUpdate();
 			prestmt.close();
-			if(1 == nRet)
+			if (1 == nRet)
 			{
 				nResult = CONN_SUCCESS;
 			}
 		}
 
 		return nResult;
+	}
+
+	public Connection getConnector()
+	{
+		return con;
+	}
+
+	public ResultSet sqlQuery(String strSQL) throws SQLException
+	{
+		if (null == con)
+			return null;
+		if (null != statement)
+		{
+			if (!statement.isClosed())
+				statement.close();
+			statement = null;
+		}
+		statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		return statement.executeQuery(strSQL);
 	}
 
 }

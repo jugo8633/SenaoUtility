@@ -159,6 +159,10 @@
                 <Item>\wink-client-1.1.3-incubating.jar</Item>
                 <Item>\wink-common-1.1.3-incubating.jar</Item>
                 <Item>\wink-jackson-provider-1.1.3-incubating.jar</Item>
+                <Item>*\mongo-2.8.0.jar</Item>
+                <Item>*\commons-fileupload-1.3.1.jar</Item>
+                <Item>*\commons-io-2.4.jar</Item>
+                <Item>*\WmsClient.jar</Item>
             </Exclude>
             <TimeSpan Type="None">0</TimeSpan>
             <SizeMin Unit="None">0</SizeMin>
