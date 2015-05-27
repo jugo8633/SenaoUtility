@@ -71,8 +71,7 @@ public class DBConnect
 		commit();
 		if (null != statement)
 		{
-			if (!statement.isClosed())
-				statement.close();
+			statement.close();
 			statement = null;
 		}
 		if (con != null)
@@ -147,8 +146,7 @@ public class DBConnect
 			return null;
 		if (null != statement)
 		{
-			if (!statement.isClosed())
-				statement.close();
+			statement.close();
 			statement = null;
 		}
 		statement = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);

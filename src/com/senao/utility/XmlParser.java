@@ -37,7 +37,7 @@ public class XmlParser
 		return null;
 	}
 
-	public Node getNode(String tagName, NodeList nodes)
+	public Node getNode(String tagName, NodeList nodes) throws Exception
 	{
 		for (int x = 0; x < nodes.getLength(); x++)
 		{
@@ -51,7 +51,7 @@ public class XmlParser
 		return null;
 	}
 
-	public String getNodeValue(Node node)
+	public String getNodeValue(Node node) throws Exception
 	{
 		NodeList childNodes = node.getChildNodes();
 		for (int x = 0; x < childNodes.getLength(); x++)
@@ -63,7 +63,7 @@ public class XmlParser
 		return "";
 	}
 
-	public String getNodeValue(String tagName, NodeList nodes)
+	public String getNodeValue(String tagName, NodeList nodes) throws Exception
 	{
 		for (int x = 0; x < nodes.getLength(); x++)
 		{
@@ -82,7 +82,7 @@ public class XmlParser
 		return "";
 	}
 
-	public String getNodeAttr(String attrName, Node node)
+	public String getNodeAttr(String attrName, Node node) throws Exception
 	{
 		NamedNodeMap attrs = node.getAttributes();
 		for (int y = 0; y < attrs.getLength(); y++)
@@ -96,7 +96,7 @@ public class XmlParser
 		return "";
 	}
 
-	public String getNodeAttr(String tagName, String attrName, NodeList nodes)
+	public String getNodeAttr(String tagName, String attrName, NodeList nodes) throws Exception
 	{
 		for (int x = 0; x < nodes.getLength(); x++)
 		{
@@ -120,7 +120,7 @@ public class XmlParser
 	}
 
 	/** Get Tag value from XML **/
-	public String getNodeValue(final String strXML, final String strTagPathName)
+	public String getNodeValue(final String strXML, final String strTagPathName) throws Exception
 	{
 		String strValue = null;
 		if (null != strXML && 0 < strXML.trim().length())
@@ -131,15 +131,21 @@ public class XmlParser
 				InputStreamReader file = new InputStreamReader(stream, "UTF-8");
 				org.dom4j.io.SAXReader reader = new org.dom4j.io.SAXReader();
 				org.dom4j.Document document = reader.read(file);
-				document.normalize();
-				List<?> entity_list = null;
-				Iterator<?> i_entity = null;
-				entity_list = document.selectNodes(strTagPathName); // node/node..... ÃÂÃÂÃÂÃÂ
-				i_entity = entity_list.iterator();
-				if (i_entity.hasNext())
+				if (null != document )
 				{
-					org.dom4j.Element v_element = (org.dom4j.Element) i_entity.next();
-					strValue = v_element.getText();
+					document.normalize();
+					List<?> entity_list = null;
+					Iterator<?> i_entity = null;
+					entity_list = document.selectNodes(strTagPathName);
+					if (null != entity_list)
+					{
+						i_entity = entity_list.iterator();
+						if (i_entity.hasNext())
+						{
+							org.dom4j.Element v_element = (org.dom4j.Element) i_entity.next();
+							strValue = v_element.getText();
+						}
+					}
 				}
 				reader = null;
 				file.close();
@@ -149,7 +155,7 @@ public class XmlParser
 			}
 			catch (Exception e)
 			{
-				e.printStackTrace();
+				throw new Exception("XmlParser Exception:" + e.toString());
 			}
 		}
 
