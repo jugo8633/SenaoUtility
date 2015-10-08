@@ -1,4 +1,4 @@
-package com.senao.utility;
+﻿package com.senao.utility;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
